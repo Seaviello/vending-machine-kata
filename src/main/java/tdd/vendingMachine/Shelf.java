@@ -9,7 +9,7 @@ import java.util.stream.IntStream;
  * Date: 23.01.2016
  */
 public class Shelf {
-    private Stack<Product> products = new Stack<>();
+    private final Stack<Product> products = new Stack<>();
     private int quantity;
 
     public Shelf(Product product, int quantity) {
@@ -26,5 +26,12 @@ public class Shelf {
 
     public int getQuantity() {
         return quantity;
+    }
+
+    public Product getProductType() {
+        if (quantity-- > 0) {
+            return products.peek();
+        }
+        throw new EmptyStackException();
     }
 }
