@@ -1,5 +1,6 @@
 package tdd.vendingMachine;
 
+import tdd.vendingMachine.exceptions.EmptyShelfException;
 import tdd.vendingMachine.exceptions.NoMoneyInserted;
 import tdd.vendingMachine.exceptions.NotEnoughChangeException;
 import tdd.vendingMachine.exceptions.NotEnoughMoneyInsertedException;
@@ -73,8 +74,8 @@ public class VendingMachine {
         return copy;
     }
 
-    public Map<Denomination, Integer> buy() throws NotEnoughChangeException, NotEnoughMoneyInsertedException {
-        if (priceOfSelectedShelf.subtract(getInsertedCash()).signum() < 0) {
+    public Map<Denomination, Integer> buy() throws NotEnoughChangeException, NotEnoughMoneyInsertedException, EmptyShelfException {
+        if (priceOfSelectedShelf.subtract(getInsertedCash()).signum() <= 0) {
             Map<Denomination, Integer> cashCopy = new HashMap<>(cash);
             Map<Denomination, Integer> change = EnumSet.allOf(Denomination.class).stream().collect(Collectors.toMap(Function.identity(), element -> 0));
             Denomination highestCoin = Utils.getNextHighestAvailableDenomination(cashCopy);
@@ -100,6 +101,13 @@ public class VendingMachine {
                     throw new NotEnoughChangeException();
                 }
             }
+
+            try {
+                shelves.get(selectedShelf).getProduct();
+            } catch (EmptyStackException e) {
+                throw new EmptyShelfException();
+            }
+
             change.entrySet().stream().forEach(entry -> cash.put(entry.getKey(), cash.get(entry.getKey()) - entry.getValue()));
             cash = new HashMap<>(cashCopy);
             insertedCash = new HashMap<>();

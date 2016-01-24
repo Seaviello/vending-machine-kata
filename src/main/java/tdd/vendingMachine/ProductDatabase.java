@@ -11,7 +11,7 @@ import java.util.List;
 class ProductDatabase {
 
     private static final List<Product> PRODUCT_LIST = Collections.unmodifiableList(Arrays.asList(Product.COLA, Product.COLA, Product.MILKA, Product.MINERAL_WATER, Product.RED_BULL, Product.RED_BULL, Product.PRINCE_POLO, Product.PRINCE_POLO));
-    private static final List<Integer> QUANTITY = Collections.unmodifiableList(Arrays.asList(5, 8, 5, 4, 2, 1, 5, 2));
+    private static final List<Integer> QUANTITY = Collections.unmodifiableList(Arrays.asList(5, 8, 5, 1, 1, 4, 5, 2));
 
     public static Shelf completeShelf(int number) {
         assert number < PRODUCT_LIST.size() && number >= 0;

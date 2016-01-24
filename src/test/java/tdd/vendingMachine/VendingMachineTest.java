@@ -3,6 +3,7 @@ package tdd.vendingMachine;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
+import tdd.vendingMachine.exceptions.EmptyShelfException;
 import tdd.vendingMachine.exceptions.NoMoneyInserted;
 import tdd.vendingMachine.exceptions.NotEnoughChangeException;
 import tdd.vendingMachine.exceptions.NotEnoughMoneyInsertedException;
@@ -71,6 +72,8 @@ public class VendingMachineTest {
             Assertions.assertThat(true);
         } catch (NotEnoughChangeException e) {
             Assertions.fail("Wrong exception type.");
+        } catch (EmptyShelfException e) {
+            Assertions.fail("Enough products!");
         }
     }
 
@@ -85,6 +88,8 @@ public class VendingMachineTest {
             Assertions.assertThat(true);
         } catch (NotEnoughMoneyInsertedException e) {
             Assertions.fail("Enough money!");
+        } catch (EmptyShelfException e) {
+            Assertions.fail("Enough products!");
         }
     }
 
@@ -101,7 +106,33 @@ public class VendingMachineTest {
             Assertions.assertThat(true);
         } catch (NotEnoughMoneyInsertedException e) {
             Assertions.fail("Enough money!");
+        } catch (EmptyShelfException e) {
+            Assertions.fail("Enough products!");
         }
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenNoProductOnShelf() {
+        machine.selectShelf(4);
+        machine.insertCoin(Denomination.ONE);
+        try {
+            machine.buy();
+        } catch (Exception e) {
+            Assertions.fail("Money should be given correctly!");
+        }
+        machine.insertCoin(Denomination.ONE);
+
+        try {
+            machine.buy();
+            Assertions.fail("Not enough products");
+        } catch (EmptyShelfException e) {
+            Assertions.assertThat(true);
+        } catch (NotEnoughMoneyInsertedException e) {
+            Assertions.fail("Enough money!");
+        } catch (NotEnoughChangeException e) {
+            Assertions.fail("Enough change!");
+        }
+
     }
 
     @Test
