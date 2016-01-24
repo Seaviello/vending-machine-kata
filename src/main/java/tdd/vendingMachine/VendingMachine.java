@@ -6,8 +6,6 @@ import tdd.vendingMachine.exceptions.NotEnoughChangeException;
 import tdd.vendingMachine.exceptions.NotEnoughMoneyInsertedException;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -55,7 +53,7 @@ public class VendingMachine {
             throw new IndexOutOfBoundsException("Not valid number");
         }
         selectedShelf = numberOfShelf;
-        return priceOfSelectedShelf = new BigDecimal(shelves.get(numberOfShelf - 1).getProductType().getPrice() / 100.0, new MathContext(2, RoundingMode.HALF_EVEN));
+        return priceOfSelectedShelf = shelves.get(numberOfShelf - 1).getProductType().getPrice();
     }
 
     public BigDecimal insertCoin(Denomination coin) throws MissingResourceException {
@@ -87,7 +85,7 @@ public class VendingMachine {
             BigDecimal remainingToGive = getInsertedCash().subtract(priceOfSelectedShelf);
 
             while (remainingToGive.signum() != 0) {
-                while (new BigDecimal(highestCoin.getValue() / 100.0, new MathContext(2, RoundingMode.HALF_EVEN)).subtract(remainingToGive).signum() > 0) {
+                while (highestCoin.getValue().subtract(remainingToGive).signum() > 0) {
                     highestCoin = Utils.getNextHighestAvailableDenomination(cashCopy, highestCoin);
                     if (highestCoin == null) {
                         throw new NotEnoughChangeException();
@@ -95,7 +93,7 @@ public class VendingMachine {
                 }
                 change.put(highestCoin, change.get(highestCoin) + 1);
                 cashCopy.put(highestCoin, cashCopy.get(highestCoin) - 1);
-                remainingToGive = remainingToGive.subtract(new BigDecimal(highestCoin.getValue() / 100.0, new MathContext(2, RoundingMode.HALF_EVEN)));
+                remainingToGive = remainingToGive.subtract(highestCoin.getValue());
 
                 if (cashCopy.get(highestCoin) == 0 && (highestCoin = Utils.getNextHighestAvailableDenomination(cashCopy, highestCoin)) == null) {
                     throw new NotEnoughChangeException();

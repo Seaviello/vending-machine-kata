@@ -18,7 +18,9 @@ class Utils {
     }
 
     public static BigDecimal getCash(Map<Denomination, Integer> cash) {
-        return new BigDecimal(cash.entrySet().stream().mapToInt(value -> value.getKey().getValue() * value.getValue()).sum() / 100.0, new MathContext(2, RoundingMode.HALF_EVEN));
+        return cash.entrySet().stream()
+            .map(value -> value.getKey().getValue().multiply(new BigDecimal(value.getValue(), new MathContext(2, RoundingMode.HALF_EVEN))))
+            .reduce(new BigDecimal(0, new MathContext(2, RoundingMode.HALF_EVEN)), BigDecimal::add);
     }
 
     public static Denomination getNextHighestAvailableDenomination(Map<Denomination, Integer> cash) {

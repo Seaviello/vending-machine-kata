@@ -43,7 +43,7 @@ public class VendingMachineTest {
 
     @Test
     public void shouldReturnPriceForGivenShelf() {
-        BigDecimal price = new BigDecimal(ProductDatabase.completeShelf(2).getProduct().getPrice() / 100.0, new MathContext(2, RoundingMode.HALF_EVEN));
+        BigDecimal price = ProductDatabase.completeShelf(2).getProduct().getPrice();
 
         Assertions.assertThat(machine.selectShelf(3)).isEqualByComparingTo(price);
     }
@@ -55,7 +55,7 @@ public class VendingMachineTest {
 
     @Test
     public void shouldReturnHowMuchNeedToBeInserted() {
-        BigDecimal remaining = machine.selectShelf(1).subtract(new BigDecimal(Denomination.ONE.getValue() / 100.0, new MathContext(2, RoundingMode.HALF_EVEN)));
+        BigDecimal remaining = machine.selectShelf(1).subtract(Denomination.ONE.getValue());
 
         Assertions.assertThat(machine.insertCoin(Denomination.ONE)).isEqualByComparingTo(remaining);
     }
@@ -176,7 +176,7 @@ public class VendingMachineTest {
         machine.insertCoin(Denomination.ONE);
 
         try {
-            Assertions.assertThat(Utils.getCash(machine.cancel())).isEqualByComparingTo(new BigDecimal(Denomination.ONE.getValue() / 100.0, new MathContext(2, RoundingMode.HALF_EVEN)));
+            Assertions.assertThat(Utils.getCash(machine.cancel())).isEqualByComparingTo(Denomination.ONE.getValue());
         } catch (NoMoneyInserted noMoneyInserted) {
             Assertions.fail("Money should be given correctly!");
         }
